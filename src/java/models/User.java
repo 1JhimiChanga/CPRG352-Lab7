@@ -21,6 +21,14 @@ public class User {
         
     }
     
+    public User(String email, String firstName, String lastName, int role){
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.role = role;
+        
+    }
+    
     public User(String email, int active, String firstName, String lastName, String password, int role){
         this.email = email;
         this.active = active;
@@ -30,6 +38,7 @@ public class User {
         this.role = role;
         
     }
+
 
     public String getEmail() {
         return email;

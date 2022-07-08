@@ -15,30 +15,60 @@ import models.User;
  * @author Jimmy
  */
 public class UserDB {
+        
+      public User get(String email) throws Exception {
+       User user = null;
+       ConnectionPool cp = ConnectionPool.getInstance();
+       Connection con = cp.getConnection();
+       PreparedStatement ps = null;
+       ResultSet rs = null;
+       
+       String sql = "SELECT * FROM user WHERE email=?";
+       try {
+           ps = con.prepareStatement(sql);
+           ps.setString(1, email);
+           rs = ps.executeQuery();
+           
+           if(rs.next()){
+               int active = rs.getInt(2);
+               String firstName = rs.getString(3);
+               String lastName = rs.getString(4);
+               String password = rs.getString(5);
+               int role = rs.getInt(6);
+               user = new User(email, active, firstName, lastName, password, role);
+           }
+           
+       } finally{
+           DBUtil.closeResultSet(rs);
+           DBUtil.closePreparedStatement(ps);
+           cp.freeConnection(con);
+       }
+       return user;
+    }
     
     
-    //REMEMBER YOU DIDNT DO THE "GET" METHOD
-    public List<User> getAll(String first) throws SQLException{
+    
+    
+    public List<User> getAll() throws SQLException{
         List<User> users = new ArrayList<>();
         ConnectionPool cp = ConnectionPool.getInstance();
         Connection con = cp.getConnection();
         PreparedStatement ps = null;
         ResultSet rs = null;
         
-        String sql = "SELECT * FROM user WHERE firstname=?";
+        String sql = "SELECT * FROM user";
         
         try{
             ps = con.prepareStatement(sql);
-            ps.setString(1, first);
             rs = ps.executeQuery();
             while(rs.next()){
-                String email = rs.getString(1);
+                String email1 = rs.getString(1);
                 int active = rs.getInt(2);
                 String firstName = rs.getString(3);
                 String lastName = rs.getString(4);
                 String password = rs.getString(5);
                 int role = rs.getInt(6);
-                User user = new User(email, active, firstName, lastName, password, role);
+                User user = new User(email1, active, firstName, lastName, password, role);
                 users.add(user);
                  
             }
@@ -111,5 +141,6 @@ public class UserDB {
              
         
     }
-    
+
+  
 }
