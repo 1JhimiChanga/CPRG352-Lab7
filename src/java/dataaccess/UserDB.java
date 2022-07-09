@@ -30,7 +30,7 @@ public class UserDB {
            rs = ps.executeQuery();
            
            if(rs.next()){
-               int active = rs.getInt(2);
+               boolean active = rs.getBoolean(2);
                String firstName = rs.getString(3);
                String lastName = rs.getString(4);
                String password = rs.getString(5);
@@ -63,7 +63,7 @@ public class UserDB {
             rs = ps.executeQuery();
             while(rs.next()){
                 String email1 = rs.getString(1);
-                int active = rs.getInt(2);
+                boolean active = rs.getBoolean(2);
                 String firstName = rs.getString(3);
                 String lastName = rs.getString(4);
                 String password = rs.getString(5);
@@ -86,16 +86,17 @@ public class UserDB {
         Connection con = cp.getConnection();
         PreparedStatement ps = null;
         ResultSet rs = null;
-        String sql = "INSERT INTO user (email, active, first_name, last_name, password, role) VALUES(?,?,?,?,?,?) ";
+        String sql = "INSERT INTO user (email, active, first_name, last_name, password, role) VALUES(?,?,?,?,?,?)";
         
         try{
             ps = con.prepareStatement(sql);
             ps.setString(1, user.getEmail());
-            ps.setInt(2, user.getActive());
+            ps.setBoolean(2, user.getActive());
             ps.setString(3, user.getFirstname());
             ps.setString(4, user.getLastname());
             ps.setString(5, user.getPassword());
             ps.setInt(6, user.getRole());
+            ps.executeUpdate();
             
         } finally{
             DBUtil.closePreparedStatement(ps);
@@ -107,14 +108,16 @@ public class UserDB {
         ConnectionPool cp = ConnectionPool.getInstance();
         Connection con = cp.getConnection();
         PreparedStatement ps = null;
-        String sql = "UPDATE user SET email=?, first_name=?, last_name=?, role=? WHERE email=?";
+        String sql = "UPDATE user SET email=?, first_name=?, last_name=?, password=?, role=? WHERE email=?";
         
         try{
             ps = con.prepareStatement(sql);
             ps.setString(1, user.getEmail());
             ps.setString(2, user.getFirstname());
             ps.setString(3, user.getLastname());
-            ps.setString(4, user.getEmail());
+            ps.setString(4, user.getPassword());
+            ps.setInt(5, user.getRole());
+            ps.setString(6, user.getEmail());
             ps.executeUpdate();
         } finally{
             DBUtil.closePreparedStatement(ps);
@@ -132,7 +135,7 @@ public class UserDB {
         try{
             ps = con.prepareStatement(sql);
             ps.setString(1, user.getEmail());
-            ps.executeQuery();
+            ps.executeUpdate();
         } finally {
             DBUtil.closePreparedStatement(ps);
             cp.freeConnection(con);

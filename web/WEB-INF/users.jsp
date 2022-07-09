@@ -18,33 +18,27 @@
         
             <h2>Add Users</h2>
                 <form method="POST" action="">
-                <label>Email: </label>
-                <input type="text" name="add_email">
-                <br>
-                <label>First Name:</label>
-                <input type="text" name="add_first">
-                <br>
-                <label>Last Name: </label>
-                <input type="text" name="add_last">
-                <br>
-                <label>Password: </label>
-                <input type="password" name="add_password">
-                <br>
-                <label>Active?</label>
-                <br>
-                <input type="radio" name="c_active" value="1">
-                <label>Active</label>
-                <br>
-                <input type="radio" name="c_active" value="0"> 
-                <label>Inactive</label>
-                <br>
-                <label>Role</label>
-                <select name="add_role">
-                    <option value="1">System Admin</option>
-                    <option value="2">Regular User</option>
-                    <option vlaue="3">Company Admin</option>
-                </select>
-            </form>
+                    <label>Email: </label>
+                    <input type="text" name="add_email">
+                    <br>
+                    <label>First Name:</label>
+                    <input type="text" name="add_first">
+                    <br>
+                    <label>Last Name: </label>
+                    <input type="text" name="add_last">
+                    <br>
+                    <label>Password: </label>
+                    <input type="password" name="add_password">
+                    <br>
+                    <label>Role</label>
+                    <select name="add_role">
+                        <option value="1">System Admin</option>
+                        <option value="2">Regular User</option>
+                        <option value="3">Company Admin</option>
+                    </select>
+                    <input type="submit" value="Add">
+                    <input type="hidden" name="action" value="add">
+                </form>
             <br>
             <p>------------------------------------------------------</p>
             <h2>Manage Users</h2>
@@ -58,30 +52,39 @@
                     <th>Delete</th>
                 </tr>
                 <c:forEach items="${UserList}" var="user">
-                    <tr>
-                        <td>${user.email}</td>
-                        <td>${user.firstname}</td>
-                        <td>${user.lastname}</td>
-                        <td>
-                            <c:if test="${user.role == 1}">
-                                <p>System Admin</p>
-                            </c:if>
-                            <c:if test="${user.role == 2}">
-                                <p>Regular User</p>
-                            </c:if>
-                            <c:if test="${user.role == 3}">
-                                <p>Company Admin</p>
-                            </c:if>
-                        </td>
-                        </td>
-                        </td>
-                        <td>
-                            <input type="submit" name="table_edit" value="EDIT">
-                        </td>
-                        <td>
-                            <input type="submit" name="table_delete" value="DELETE">
-                        </td>
-                    </tr>
+                    <form method="POST" action="">
+                        <tr>
+                            <td>${user.email}</td>
+                        <input type="hidden" name="thisRowEmail" value="${user.email}">
+                            <td>${user.firstname}</td>
+                            <td>${user.lastname}</td>
+                            <td>
+                                <c:if test="${user.role == 1}">
+                                    <p>System Admin</p>
+                                </c:if>
+                                <c:if test="${user.role == 2}">
+                                    <p>Regular User</p>
+                                </c:if>
+                                <c:if test="${user.role == 3}">
+                                    <p>Company Admin</p>
+                                </c:if>
+                            </td>
+                            </td>
+                            </td>
+                            <td>
+                                
+                                    <input type="submit" name="table_edit" value="EDIT">
+<!--                                    <input type="hidden" name="action" value="edit">-->
+                               
+                            </td>
+                            <td>
+                                
+                                    <input type="submit" name="table_delete" value="DELETE">
+                                    <input type="hidden" name="action" value="delete">
+                               
+                            </td>
+                        </tr>
+                     </form>
                 </c:forEach>
             </table>
             
@@ -97,12 +100,17 @@
                 <label>Last Name: </label>
                 <input type="text" name="edit_last">
                 <br>
+                <label>Password: </label>
+                <input type="text" name="edit_password">
+                <br>
                 <label>Role</label>
                  <select name="edit_role">
-                    <option value="system">System Admin</option>
-                    <option value="regular">Regular User</option>
-                    <option vlaue="company">Company Admin</option>
+                    <option value="1">System Admin</option>
+                    <option value="2">Regular User</option>
+                    <option value="3">Company Admin</option>
                 </select>
+                <input type="submit" value="Save">
+                <input type="hidden" name="action" value="save">
             </form>
        
     </body>

@@ -36,7 +36,7 @@ public class UserServlet extends HttpServlet {
          try {
             HttpSession session = request.getSession();
             List<User> userList = user.getAll();
-            request.setAttribute("UserList",userList);
+            session.setAttribute("UserList",userList);
             
         } catch (Exception ex) {
             Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
@@ -56,6 +56,8 @@ public class UserServlet extends HttpServlet {
             throws ServletException, IOException {
         
          HttpSession session = request.getSession();
+         UserService user = new UserService();
+         String action = request.getParameter("action");
         //Adding Variables 
         String addEmail = request.getParameter("add_email");
         String addFirst = request.getParameter("add_first");
@@ -67,16 +69,36 @@ public class UserServlet extends HttpServlet {
         String editEmail = request.getParameter("edit_email");
         String editFirst = request.getParameter("edit_first");
         String editLast = request.getParameter("edit_last");
+        String editPassword = request.getParameter("edit_password");
         String editRole = request.getParameter("edit_role");
         
         UserService us = new UserService();
+       String thisEmail = request.getParameter("thisRowEmail");
         try {
-            us.insert(addEmail, Integer.parseInt(active), addFirst, addLast, addPassword, Integer.parseInt(role));
+            if(action != null){
+                if(action.equals("add")){
+                    us.insert(addEmail, true, addFirst, addLast, addPassword, Integer.parseInt(role));
+                } else if (action.equals("delete")){
+                    us.delete(thisEmail);
+                } else if (action.equals("save")){
+                    us.update(editEmail, true, editFirst, editLast, editPassword, Integer.parseInt(editRole));
+                }
+            }
         } catch (Exception ex) {
             Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        response.sendRedirect("User");
+         try {
+            
+            List<User> userList = user.getAll();
+            request.setAttribute("UserList",userList);
+            
+        } catch (Exception ex) {
+            Logger.getLogger(UserServlet.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Not Working");
+        }
+         
+         getServletContext().getRequestDispatcher("/WEB-INF/users.jsp").forward(request, response);
        
         
     }
